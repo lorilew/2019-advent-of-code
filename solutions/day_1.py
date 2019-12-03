@@ -17,5 +17,5 @@ def fuel_needed_for_modules(input_file_name, fuel_func):
     return sum([fuel_func(int(module)) for module in data])
 
 
-print(fuel_needed_for_modules("../resources/input-1.txt", basic_fuel))
-print(fuel_needed_for_modules("../resources/input-1.txt", super_plus_fuel))
+print(fuel_needed_for_modules("../resources/input_1.txt", basic_fuel))
+print(fuel_needed_for_modules("../resources/input_1.txt", super_plus_fuel))
