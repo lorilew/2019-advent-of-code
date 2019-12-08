@@ -1,12 +1,13 @@
 from dijkstar import Graph, find_path
 
+
 def read_orbits(data_str):
-    orbits = data_str.split('\n')
+    orbits = data_str.split("\n")
     orbit_tree = {}
     for orbit in orbits:
-        parent, child = orbit.split(')')
+        parent, child = orbit.split(")")
         if child in orbit_tree:
-            raise Exception('Cannot orbit more than one planet')
+            raise Exception("Cannot orbit more than one planet")
         else:
             orbit_tree[child] = parent
     return orbit_tree
@@ -41,5 +42,5 @@ def sol_6_b(data_str):
     for planet in orbit_tree:
         g.add_edge(orbit_tree[planet], planet, 1)
         g.add_edge(planet, orbit_tree[planet], 1)
-    path = find_path(g, 'YOU', orbit_tree['SAN'])
+    path = find_path(g, "YOU", orbit_tree["SAN"])
     return path.total_cost - 1

@@ -1,3 +1,5 @@
+from itertools import permutations
+
 POSITION = "0"
 IMMEDIATE = "1"
 
@@ -54,8 +56,7 @@ def handle_opcode_04(data, index, modes, output):
 
 def handle_opcode_03(data, index, input, modes):
     """ input """
-    if input:
-        input_by_mode(data, modes[0], index + 1, input)
+    input_by_mode(data, modes[0], index + 1, input)
 
 
 def handle_opcode_02(data, index, modes):
@@ -104,7 +105,7 @@ def increment_index(index, opcode):
     return index + opcode_lengths[opcode] + 1
 
 
-def intcode_computer(data_str, input=1):
+def intcode_computer(data_str, input=[]):
     data = [int(i) for i in data_str.split(",")]
     index = 0
     output = []
@@ -120,7 +121,8 @@ def intcode_computer(data_str, input=1):
             handle_opcode_02(data, index, modes)
             index = increment_index(index, opcode)
         elif opcode == "03":
-            handle_opcode_03(data, index, input, modes)
+            value = input.pop(0)
+            handle_opcode_03(data, index, value, modes)
             index = increment_index(index, opcode)
         elif opcode == "04":
             output = handle_opcode_04(data, index, modes, output)
@@ -137,4 +139,19 @@ def intcode_computer(data_str, input=1):
             index = increment_index(index, opcode)
         else:
             raise ValueError(f"Opcode not found: {opcode}")
-    return output[-1]
+    return ",".join([str(i) for i in data]), output[-1]
+
+
+def sol_7(data):
+    perms = permutations([0, 1, 2, 3, 4], 5)
+    possible_outcomes = []
+    for perm in perms:
+        phase_settings = list(perm)
+        output = 0
+        for i in range(5):
+            input = [int(phase_settings[i]), output]
+            data, thing = intcode_computer(data, input)
+            output = thing
+        possible_outcomes += [(phase_settings, output)]
+    sorted_possible_outcomes = sorted(possible_outcomes, key=lambda x: x[1])
+    return sorted_possible_outcomes[-1]
